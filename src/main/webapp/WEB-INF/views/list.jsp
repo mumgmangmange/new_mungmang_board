@@ -110,14 +110,6 @@
 		                </tr>
 	                </thead>
 	                <tbody id = "table_datas">
-	                <!-- 
-		                <tr id="tr_1" key="1">
-		                    <td>200</td>
-		                    <td>janedoe</td>
-		                    <td>Yane</td>
-		                    <td>Doe</td>
-		                </tr>
-		            -->
 						<c:forEach items="${mungmang.list}" var="data">
 						<tr id="tr_${data.idx}" key="${data.idx}">
 							<td>${data.idx}</td>
@@ -133,11 +125,4 @@
      </div>
  </div>
 
-<script src="http://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
-<script src="js/vendor/bootstrap.min.js" type="text/javascript"></script>
-<script src="js/vendor/jquery.sortelements.js" type="text/javascript"></script>
-<script src="js/jquery.bdt.min.js" type="text/javascript"></script>
-
-<script src="js/board.js" type="text/javascript"></script>
-</body>
-</html>
+<%@include file="bottom.jsp" %>

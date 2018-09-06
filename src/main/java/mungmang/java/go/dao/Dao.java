@@ -24,4 +24,6 @@ public interface Dao {
 	//삭제
 	public int delete(int seq);
 	
+	//수정처리
+	public void modify(BoardDatas boardDatas);
 }

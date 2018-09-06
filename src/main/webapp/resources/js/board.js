@@ -53,6 +53,7 @@ $(document).ready( function () {
 
             	} else if(chk == true && updel == 'modify') {
             		
+            		$('#edit_ok').attr("action","./modify");
             		$('#edit_ok').submit();
             		//location.href = "./edit?idx="+location_search_data+"&key="+encodeURIComponent(location_search_data);
             		

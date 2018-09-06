@@ -33,6 +33,12 @@ public class BoardCommandService implements BoardCommand{
 		dao.write(BoardDatas);
 	}
 	
+
+	@Override
+	public void modify(BoardDatas BoardDatas) {
+		dao.modify(BoardDatas);
+	}	
+	
 	@Override
 	public BoardDatas read(int seq) {
 		
@@ -59,4 +65,5 @@ public class BoardCommandService implements BoardCommand{
 		return result_chk;
 		//return null;
 	}
+
 }

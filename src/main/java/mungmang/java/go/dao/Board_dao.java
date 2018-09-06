@@ -51,6 +51,13 @@ public class Board_dao implements Dao{
 		sqlSession.insert("insert",boardDatas); //sqlSessionTemplate.insert("write_ok", boardDatas);
 	}
 	
+	//수정처리
+	@Override
+	public void modify(BoardDatas boardDatas) {
+		// TODO Auto-generated method stub
+		sqlSession.update("update",boardDatas); //sqlSessionTemplate.insert("write_ok", boardDatas);
+	}
+	
 	//메인리스트
 	@Override
 	public List<BoardDatas> list(String searchOption, String keyword) {
@@ -88,5 +95,7 @@ public class Board_dao implements Dao{
 	    map.put("id", seq);
 		return sqlSession.delete("delete",map);			
 	}
+	
+
 
 }

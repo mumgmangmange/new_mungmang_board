@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,9 +24,6 @@ import mungmang.java.go.command.BoardCommand;
 import mungmang.java.go.dto.BoardDatas;
 import mungmang.java.go.dto.Passwd_chk;
 
-/**
- * Handles requests for the application home page.
- */
 @Controller
 public class Board {
 	
@@ -83,10 +81,11 @@ public class Board {
 		map.put("updel",passwd_chk.getUpdel());
 		return map;
 	}
+
 	
 	//수정 뷰
-	@RequestMapping(value = "/edit", method = RequestMethod.POST)
-	public ModelAndView edit(Locale locale, @ModelAttribute("BoardDatas") BoardDatas boardDatas
+	@RequestMapping(value = "/modify", method = RequestMethod.GET)
+	public ModelAndView modify(Locale locale, @ModelAttribute("BoardDatas") BoardDatas boardDatas
 			, @RequestParam(defaultValue="idx") int idx) {
 		
 		logger.info("edit page", locale);
@@ -94,16 +93,12 @@ public class Board {
 		System.out.println("edit idx>>" + idx);
 		ModelAndView modelAndView = new ModelAndView();
 		
-		modelAndView.setViewName("write");
-		modelAndView.addObject("title", "게시판 - 수정");
-		modelAndView.addObject("btn_one_id", "modify_ok");
-		modelAndView.addObject("btn_one_text", "수정");
-
 		BoardDatas boarddatas = boardcommand.read(idx);
 		
 		modelAndView.addObject("username", boarddatas.getUsername());
 		modelAndView.addObject("subject", boarddatas.getSubject());
 		modelAndView.addObject("contents", boarddatas.getContents());
+		modelAndView.addObject("idx", boarddatas.getIdx());
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 	    map.put("boardDatas", boardDatas); // boardDatas
@@ -115,20 +110,11 @@ public class Board {
 	//글쓰기 뷰
 	@RequestMapping(value = "/write", method = RequestMethod.GET)
 	public ModelAndView write(Locale locale, @ModelAttribute("BoardDatas") BoardDatas boardDatas) {
+		
 		logger.info("write page", locale);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		
-		modelAndView.setViewName("write");
-		modelAndView.addObject("title", "게시판 - 쓰기");
-		modelAndView.addObject("btn_one_id", "write_ok");
-		modelAndView.addObject("btn_one_text", "쓰기");
-		modelAndView.addObject("next_page", "write_ok");
-		
-		modelAndView.addObject("username", "");
-		modelAndView.addObject("subject", "");
-		modelAndView.addObject("contents", "");
-
 	    Map<String, Object> map = new HashMap<String, Object>();
 	    map.put("boardDatas", boardDatas); // boardDatas
 	    modelAndView.addAllObjects(map);
@@ -137,22 +123,36 @@ public class Board {
 	}
 	
 	//글쓰기 처리 
-	@RequestMapping(value = "/write_ok", method = RequestMethod.POST)
-	public String write_ok(Locale locale, @ModelAttribute("BoardDatas") BoardDatas boardDatas, BindingResult bindingResult, Model model, Errors errors) {
+	@RequestMapping(value = "/write", method = RequestMethod.POST)
+	public String write_ok(Locale locale, @Valid BoardDatas boardDatas, BindingResult bindingResult, Model model) {
 		
 		logger.info("write ok", locale);
-		
-		if(errors.hasErrors()) {
-			return "go/write";
-		}
-		
+
         if(bindingResult.hasErrors()) {
         	
-            System.out.println("등록 중 에러발생");
-            return "redirect:/write";
+            return "write";
             
         } else {
+        	
         	boardcommand.write(boardDatas);
+        	return "redirect:/";
+        }
+	}
+	
+	
+	//수정 처리
+	@RequestMapping(value = "/modify", method = RequestMethod.POST)
+	public String modify_ok(Locale locale, @Valid BoardDatas boardDatas, BindingResult bindingResult, Model model) {
+		
+		logger.info("modify ok", locale);
+
+        if(bindingResult.hasErrors()) {
+        	
+            return "modify";
+            
+        } else {
+        	
+        	boardcommand.modify(boardDatas);
         	return "redirect:/";
         }
 	}

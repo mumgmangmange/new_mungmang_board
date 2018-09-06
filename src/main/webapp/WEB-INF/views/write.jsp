@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>게시판 - ${btn_one_text}</title>
+    <title>게시판 - 글쓰기</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/vendor/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="css/vendor/font-awesome.min.css" type="text/css" rel="stylesheet">
@@ -32,43 +32,43 @@
 <div class="container">
     <div class="row">
             <div class="box clearfix">
-            <h3><b><a href="./">${title}</a></b></h3>
+            <h3><b><a href="./">글쓰기</a></b></h3>
             <p>~ 뭉망이 스프링 게시판 만들기 :D</p>
 			
-			<form:form action="./${next_page}" method = "post" modelAttribute="boardDatas">
+			<form:form name="frm" id="frm" method = "post" modelAttribute="boardDatas" action="./write">
 	            <table class="table table-hover" id="bootstrap-table-read">
 	                <tbody>
 		                <tr>
 		                    <td style="width:30%;text-align:center;">글쓴이</td>
 		                    <td>
-		                    	<form:input path="username" class="form-control" id="username" name="username" value="${username}"/>
-		                    	<form:errors path="username" cssClass="error" />
+		                    	<form:errors path="username" cssClass="error"/>
+		                    	<form:input path="username" class="form-control" id="username" name="username"/>
 		                    </td>
 		                </tr>
 		                <tr>
 		                    <td style="text-align:center;">제목</td>
 		                    <td>
-		                    	<form:input class="form-control" path="subject" id="subject" name="subject" value="${subject}"/>
-		                    	<form:errors path="subject" cssClass="error" />
+		                    	<form:errors path="subject" cssClass="error"/>
+		                    	<form:input class="form-control" path="subject" id="subject" name="subject"/>
 		                    </td>
 		                </tr>
 		                <tr>
 		                    <td style="text-align:center;">내용</td>
 		                    <td>
-		                    	<textarea class="form-control"  style="height:400px;" id="contents" name="contents">${contents}</textarea>
-		                    	<form:errors path="contents" cssClass="error" />
+		                    	<form:errors path="contents" cssClass="error"/>
+		                    	<textarea class="form-control"  style="height:400px;" id="contents" name="contents"></textarea>
 		                    </td>
 		                </tr>
 		                <tr>
 		                    <td style="text-align:center;">비밀번호 입력</td>
 		                    <td>
+		                    	<form:errors path="password" cssClass="error"/>
 		                    	<form:password class="form-control" path="password" id="password" name = "password"/>
-		                    	<form:errors path="password" cssClass="error" />
 		                    </td>
 		                </tr>	                
 		                <tr>
 		                    <td colspan="2" style="text-align:center;">
-		                    	<button class="btn btn-default" id="${btn_one_id}">${btn_one_text}</button>
+		                    	<button class="btn btn-default" id="write_ok">글쓰기</button>
 		                    	<button class="btn btn-danger" id="front_page">뒤로</button>
 		                    </td>
 		                </tr>   
@@ -79,12 +79,4 @@
      </div>
 </div>
 
-
-<script src="http://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
-<script src="js/vendor/bootstrap.min.js" type="text/javascript"></script>
-<script src="js/vendor/jquery.sortelements.js" type="text/javascript"></script>
-<script src="js/jquery.bdt.min.js" type="text/javascript"></script>
-
-<script src="js/board.js" type="text/javascript"></script>
-</body>
-</html>
+<%@include file="bottom.jsp" %>

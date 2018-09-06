@@ -1,5 +1,7 @@
 package mungmang.java.go.dto;
 
+import javax.validation.constraints.Pattern;
+
 import org.apache.ibatis.type.Alias;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -15,7 +17,7 @@ public class BoardDatas {
 	
 	@NotEmpty(message="내용을 입력해 주세요.")
 	String contents;
-
+	
 	@NotEmpty(message="비밀번호를 입력해 주세요.")
 	String password;
 	

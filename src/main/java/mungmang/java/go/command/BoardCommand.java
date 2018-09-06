@@ -13,6 +13,8 @@ public interface BoardCommand {
 	public int delete(int idx);
 
 	public void write(BoardDatas BoardDatas);
+	
+	public void modify(BoardDatas BoardDatas);
 
 	public BoardDatas read(int seq);	
 	
