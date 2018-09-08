@@ -22,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import mungmang.java.go.command.BoardCommand;
 import mungmang.java.go.dto.BoardDatas;
-import mungmang.java.go.dto.Passwd_chk;
 
 @Controller
 public class Board {
@@ -57,54 +56,19 @@ public class Board {
 
 	//읽기 뷰
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
-	public String read(Locale locale, Model model, @RequestParam(defaultValue="id") int id) {
+	public String read(Locale locale, Model model, @RequestParam(defaultValue="id") String id) {
+		
 		logger.info("read page", locale);
+		
+		int get_idx = Integer.parseInt(id);
 
-		BoardDatas boarddatas = boardcommand.read(id);
+		BoardDatas boarddatas = boardcommand.read(get_idx);
 	    model.addAttribute("mungmang",boarddatas);
 		
 	    //조회수 증가처리
-		boardcommand.countUp(boarddatas.getViewcount(), id);
+		boardcommand.countUp(boarddatas.getViewcount(), get_idx);
 
 		return "read";
-	}
-	
-	//비밀번호창
-	@RequestMapping(value = "/passwd_chk", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> passwd_chk(Locale locale, Passwd_chk passwd_chk) {
-		logger.info("password_form page", locale);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		boolean chk = boardcommand.passwd_chk(passwd_chk);
-		map.put("chk",chk);
-		map.put("updel",passwd_chk.getUpdel());
-		return map;
-	}
-
-	
-	//수정 뷰
-	@RequestMapping(value = "/modify", method = RequestMethod.GET)
-	public ModelAndView modify(Locale locale, @ModelAttribute("BoardDatas") BoardDatas boardDatas
-			, @RequestParam(defaultValue="idx") int idx) {
-		
-		logger.info("edit page", locale);
-		
-		System.out.println("edit idx>>" + idx);
-		ModelAndView modelAndView = new ModelAndView();
-		
-		BoardDatas boarddatas = boardcommand.read(idx);
-		
-		modelAndView.addObject("username", boarddatas.getUsername());
-		modelAndView.addObject("subject", boarddatas.getSubject());
-		modelAndView.addObject("contents", boarddatas.getContents());
-		modelAndView.addObject("idx", boarddatas.getIdx());
-	    
-		Map<String, Object> map = new HashMap<String, Object>();
-	    map.put("boardDatas", boardDatas); // boardDatas
-	    modelAndView.addAllObjects(map);
-	    
-		return modelAndView;
 	}
 	
 	//글쓰기 뷰
@@ -139,9 +103,51 @@ public class Board {
         }
 	}
 	
+	//비밀번호창
+	@RequestMapping(value = "/passwd_chk", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> passwd_chk(Locale locale, @RequestParam(defaultValue="idx") String idx, @RequestParam(defaultValue="password") String password) {
+		
+		logger.info("password_form page", locale);
+		
+		int get_idx = Integer.parseInt(idx);
+		Boolean result = boardcommand.passwd_chk(get_idx, password);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("result",result);
+		
+		return map;
+	}
+	
+	//수정 뷰
+	@RequestMapping(value = "/modify", method = RequestMethod.POST)
+	public ModelAndView modify(Locale locale, @ModelAttribute("BoardDatas") BoardDatas boardDatas
+			, @RequestParam(defaultValue="id") String id) {
+		
+		logger.info("edit page", locale);
+		
+		int get_idx = Integer.parseInt(id);
+		
+		System.out.println("edit idx>>" + id);
+		ModelAndView modelAndView = new ModelAndView();
+		
+		BoardDatas boarddatas = boardcommand.read(get_idx);
+		
+		modelAndView.addObject("username", boarddatas.getUsername());
+		modelAndView.addObject("subject", boarddatas.getSubject());
+		modelAndView.addObject("contents", boarddatas.getContents());
+		modelAndView.addObject("idx", boarddatas.getIdx());
+	    
+		Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("boardDatas", boardDatas); // boardDatas
+	    modelAndView.addAllObjects(map);
+	    
+		return modelAndView;
+	}
 	
 	//수정 처리
-	@RequestMapping(value = "/modify", method = RequestMethod.POST)
+	@RequestMapping(value = "/modify_ok", method = RequestMethod.POST)
 	public String modify_ok(Locale locale, @Valid BoardDatas boardDatas, BindingResult bindingResult, Model model) {
 		
 		logger.info("modify ok", locale);
@@ -160,12 +166,14 @@ public class Board {
 	//삭제 처리
 	@RequestMapping(value = "/delete_ok", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> delete_ok(Locale locale, @RequestParam(defaultValue="idx") int idx) {
+	public Map<String, Object> delete_ok(Locale locale, @RequestParam(defaultValue="idx") String idx) {
 		
 		logger.info("delete ok", locale);
 
+		int get_idx = Integer.parseInt(idx);
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		int result = boardcommand.delete(idx);
+		int result = boardcommand.delete(get_idx);
 		map.put("result",result);
 		return map;
 	}

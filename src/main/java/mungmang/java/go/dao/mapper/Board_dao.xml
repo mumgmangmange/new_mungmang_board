@@ -13,8 +13,9 @@
 
 	<!-- 글수정 -->
 	<update id="modify">
-		update mungmang_board set subject=#{subject}, username=#{username}, contents=#{contents}, password=password(#{password}), modify_date=now() 
-		where idx=#{idx};
+		update mungmang_board 
+		set subject=#{subject}, username=#{username}, contents=#{contents}, password=password(#{password}), modify_date=now() 
+		where idx=#{idx}
 	</update>
 		
 	<!-- 리스트출력 -->
@@ -38,16 +39,15 @@
 	</insert>
 
 	<!-- 패스워드 확인 -->
-	<select id="passwd_chk" resultType="java.lang.String" parameterType="java.util.HashMap">
-	    SELECT count(idx) as cnt
-	    FROM mungmang_board 
-	    WHERE idx = #{idx} 
-	    AND password = password(#{password})
+	<select id="passwd_chk" resultType="java.lang.Boolean" parameterType="java.util.HashMap">
+		SELECT if(password=password(#{password}),true,false) as result 
+		FROM mungmang_board 
+		WHERE idx=#{idx} 
 	</select>	
 
 	<!-- 삭제 -->
 	<delete id="delete" parameterType="java.util.HashMap">
-		delete from mungmang_board where idx = #{id}
+		delete from mungmang_board where idx = #{idx}
 	</delete>
 
 </mapper>

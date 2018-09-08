@@ -20,7 +20,7 @@
             <h3><b><a href="./">게시판 - 읽기</a></b></h3>
             <p>~ 뭉망이 스프링 게시판 만들기 :D</p>
 
-            <table class="table table-hover" id="bootstrap-table-read" idx="${mungmang.idx}">
+            <table class="table table-hover" id="bootstrap-table-read" idx=${mungmang.idx}>
                 <tbody>
 	                <tr>
 	                    <td style="width:30%;text-align:center;">작성일</td>

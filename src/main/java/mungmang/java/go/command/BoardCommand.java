@@ -3,7 +3,6 @@ package mungmang.java.go.command;
 import java.util.List;
 
 import mungmang.java.go.dto.BoardDatas;
-import mungmang.java.go.dto.Passwd_chk;
 
 
 public interface BoardCommand {
@@ -20,6 +19,6 @@ public interface BoardCommand {
 	
 	public int countUp(int viewcount, int seq);
 
-	public boolean passwd_chk(Passwd_chk passwd_chk);
+	public boolean passwd_chk(int idx, String password);
 	
 }

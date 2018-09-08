@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page session="false" %>
+<%@ page session="false" %> 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -35,7 +35,7 @@
             <h3><b><a href="./">내용수정</a></b></h3>
             <p>~ 뭉망이 스프링 게시판 만들기 :D</p>
 			
-			<form:form name="frm" id="frm" method = "post" modelAttribute="boardDatas" action="./modify">
+			<form:form name="frm" id="frm" method = "post" modelAttribute="boardDatas" action="./modify_ok">
 				<input type="hidden" name="idx" value="${idx}">
 	            <table class="table table-hover" id="bootstrap-table-read">
 	                <tbody>

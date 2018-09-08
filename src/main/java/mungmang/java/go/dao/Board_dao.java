@@ -23,39 +23,19 @@ public class Board_dao implements Dao{
     
 	public Board_dao() {
 	}
-	
-	//비밀번호 확인
-	@Override
-	public boolean passwd_chk(int idx, String password) {
-
-		System.out.println(idx + "," + password);
-		
-	    Map<String, Object> map = new HashMap<String, Object>();
-	    map.put("idx", idx);
-	    map.put("password", password);
-	    
-	    String result = sqlSession.selectOne("passwd_chk",map);
-	    
-	    System.out.println("board_dao::" + result);
-	    
-	    if(result.equals("0")) {
-	    	return false;
-	    }
-		return true;
-	}
 
 	//글쓰기 처리
 	@Override
 	public void write(BoardDatas boardDatas) {
 
-		sqlSession.insert("insert",boardDatas); //sqlSessionTemplate.insert("write_ok", boardDatas);
+		sqlSession.insert("insert",boardDatas);
 	}
 	
 	//수정처리
 	@Override
 	public void modify(BoardDatas boardDatas) {
 		// TODO Auto-generated method stub
-		sqlSession.update("update",boardDatas); //sqlSessionTemplate.insert("write_ok", boardDatas);
+		sqlSession.update("modify",boardDatas);
 	}
 	
 	//메인리스트
@@ -92,10 +72,19 @@ public class Board_dao implements Dao{
 	@Override
 	public int delete(int seq) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
-	    map.put("id", seq);
+	    map.put("idx", seq);
 		return sqlSession.delete("delete",map);			
 	}
 	
+	
+	//비밀번호 확인
+	@Override
+	public boolean passwd_chk(int idx, String password) {
 
-
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("idx", idx);
+	    map.put("password", password);
+	    
+		return sqlSession.selectOne("passwd_chk",map);
+	}
 }

@@ -4,6 +4,12 @@ $(document).ready( function () {
         showSearchForm: 0,
         showEntriesPerPageField: 0
     });
+	
+	
+	//모달 창 열릴때 초기화
+	$('#passwd_div').on('shown.bs.modal', function () {
+		$('#password_chk').val("");
+	})
 
 	// 테이블 클릭->글읽기페이지로 이동
     $('#table_datas tr').on('click',function(){
@@ -28,14 +34,11 @@ $(document).ready( function () {
     //비밀번호 입력
     $('#password_confirm').on('click',function(){
     	
-    	$('#password_chk').val("");
-    	
     	var pwd = $('#password_chk').val(),
-    		location_search = location['search'],
-    		location_search_data = location_search.split('=')[1],
+    		idx = location['search'].split("=")[1],
     		updel = $("#password_chk").attr('key'),
-    		send_json = {'password':pwd, 'idx':location_search_data, 'updel':updel};
-    	
+    		send_json = {'password':pwd, 'idx':idx, 'updel':updel};
+
     	$.ajax({
             url:'./passwd_chk',
             type:'post',
@@ -43,19 +46,16 @@ $(document).ready( function () {
             datatype:'json',
             success:function(data, status){
             	
-            	var updel = data.updel,
-            		chk = data.chk;
-
-            	if(chk == true && updel == 'delete') {
+            	if(data.result == true && updel == 'delete') {
             		
-            		//$('#password_modal').modal('close');
             		$('#del_confirm_inner').modal('show');
 
-            	} else if(chk == true && updel == 'modify') {
+            	} else if(data.result == true && updel == 'modify') {
             		
-            		$('#edit_ok').attr("action","./modify");
+            		$('#edit_ok').attr("method","POST");
+            		$('#edit_ok').attr("action","./modify?id="+idx);
+
             		$('#edit_ok').submit();
-            		//location.href = "./edit?idx="+location_search_data+"&key="+encodeURIComponent(location_search_data);
             		
             	} else {
             		
@@ -69,16 +69,16 @@ $(document).ready( function () {
     //삭제하시겠습니까?
     $('#del_confirm').on('click','#del_ok',function(){
     	
-    	var idx = $('#bootstrap-table-read').attr('idx'),
+    	var idx = $('#del_ok').attr('key'),
     		send_json = {'idx':idx};
-    	
+
     	$.ajax({
             url:'./delete_ok',
             type:'post',
             data:send_json,
             datatype:'json',
             success:function(data, status){
-            	
+
             	if(data.result == 1) {
             		alert('삭제완료!!');
             	} else {
@@ -88,10 +88,32 @@ $(document).ready( function () {
             }
         });     	
     });
-    
+
     // -1 page 이동
     $('#front_page').on('click',function(){
     	history.go(-1);
+    });
+    
+    //수정확인버튼 클릭시 유효성 체크
+    $('#modify_ok').on('click',function(){
+    	if($("#username").val().length <= 0) {
+    		alert("글쓴이 명을 입력해 주세요.");
+    		return false;
+    	}
+    	if($("#subject").val().length <= 0) {
+    		alert("제목을 입력해 주세요.");
+    		return false;
+    	}
+    	if($("#contents").val().length <= 0) {
+    		alert("내용을 입력해 주세요.");
+    		return false;
+		}
+    	if($("#password").val().length <= 0) {
+    		alert("비밀번호를 입력해 주세요.");
+    		return false;
+    	}
+    	
+    	$("#frm").submit();
     });
 
 });

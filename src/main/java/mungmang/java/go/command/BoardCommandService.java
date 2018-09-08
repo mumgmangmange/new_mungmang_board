@@ -6,7 +6,6 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import mungmang.java.go.dao.Dao;
 import mungmang.java.go.dto.BoardDatas;
-import mungmang.java.go.dto.Passwd_chk;
 
 @Service("boardCommand")
 public class BoardCommandService implements BoardCommand{
@@ -52,18 +51,9 @@ public class BoardCommandService implements BoardCommand{
 	}
 
 	@Override
-	public boolean passwd_chk(Passwd_chk passwd_chk) {
+	public boolean passwd_chk(int idx, String password) {
 	
-		
-		int idx = passwd_chk.getIdx();
-		String password = passwd_chk.getPassword();
-
-		System.out.println(idx + ",," + password);
-		
-		boolean result_chk = dao.passwd_chk(idx, password);
-		
-		return result_chk;
-		//return null;
+		return dao.passwd_chk(idx, password);
 	}
 
 }
