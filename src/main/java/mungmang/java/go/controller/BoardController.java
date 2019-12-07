@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import mungmang.java.go.service.BoardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,31 +21,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import mungmang.java.go.command.BoardCommand;
-import mungmang.java.go.dto.BoardDatas;
+import mungmang.java.go.dto.BoardDataDto;
 
 @Controller
-public class Board {
+public class BoardController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(Board.class);
+	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 	
-	@Autowired
-	BoardCommand boardcommand;
+	@Autowired BoardService boardservice;
 
 	//메인 리스트
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView list(Locale locale, 
-			@ModelAttribute("BoardDatas") BoardDatas boardDatas, 
+			@ModelAttribute("BoardDatas") BoardDataDto boardDatas,
 			@RequestParam(defaultValue="title") String searchOption,
             @RequestParam(defaultValue="") String keyword) {
 		
 		logger.info("list page", locale);
 		
-		List<BoardDatas> list = boardcommand.list("", "");
+		List<BoardDataDto> list = this.boardservice.list("", "");
 		
 		ModelAndView modelAndView = new ModelAndView();
 		
-	    Map<String, Object> map = new HashMap<String, Object>();
+	    Map<String, Object> map = new HashMap<>();
 	    map.put("list", list); // list
 	    map.put("searchOption", searchOption); // 검색옵션
 	    map.put("keyword", keyword); // 검색키워드
@@ -62,24 +61,24 @@ public class Board {
 		
 		int get_idx = Integer.parseInt(id);
 
-		BoardDatas boarddatas = boardcommand.read(get_idx);
+		BoardDataDto boarddatas = this.boardservice.read(get_idx);
 	    model.addAttribute("mungmang",boarddatas);
 		
 	    //조회수 증가처리
-		boardcommand.countUp(boarddatas.getViewcount(), get_idx);
+		//this.boardservice.countUp(boarddatas.getViewcount(), get_idx);
 
 		return "read";
 	}
 	
 	//글쓰기 뷰
 	@RequestMapping(value = "/write", method = RequestMethod.GET)
-	public ModelAndView write(Locale locale, @ModelAttribute("BoardDatas") BoardDatas boardDatas) {
+	public ModelAndView write(Locale locale, @ModelAttribute("BoardDatas") BoardDataDto boardDatas) {
 		
 		logger.info("write page", locale);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		
-	    Map<String, Object> map = new HashMap<String, Object>();
+	    Map<String, Object> map = new HashMap<>();
 	    map.put("boardDatas", boardDatas); // boardDatas
 	    modelAndView.addAllObjects(map);
 	    
@@ -88,17 +87,14 @@ public class Board {
 	
 	//글쓰기 처리 
 	@RequestMapping(value = "/write", method = RequestMethod.POST)
-	public String write_ok(Locale locale, @Valid BoardDatas boardDatas, BindingResult bindingResult, Model model) {
+	public String write_ok(Locale locale, @Valid BoardDataDto boardDatas, BindingResult bindingResult) {
 		
 		logger.info("write ok", locale);
 
         if(bindingResult.hasErrors()) {
-        	
             return "write";
-            
         } else {
-        	
-        	boardcommand.write(boardDatas);
+			this.boardservice.write(boardDatas);
         	return "redirect:/";
         }
 	}
@@ -111,9 +107,9 @@ public class Board {
 		logger.info("password_form page", locale);
 		
 		int get_idx = Integer.parseInt(idx);
-		Boolean result = boardcommand.passwd_chk(get_idx, password);
+		Boolean result = this.boardservice.passwdCheck(get_idx, password);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		
 		map.put("result",result);
 		
@@ -122,7 +118,7 @@ public class Board {
 	
 	//수정 뷰
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public ModelAndView modify(Locale locale, @ModelAttribute("BoardDatas") BoardDatas boardDatas
+	public ModelAndView modify(Locale locale, @ModelAttribute("BoardDatas") BoardDataDto boardDatas
 			, @RequestParam(defaultValue="id") String id) {
 		
 		logger.info("edit page", locale);
@@ -132,14 +128,9 @@ public class Board {
 		System.out.println("edit idx>>" + id);
 		ModelAndView modelAndView = new ModelAndView();
 		
-		BoardDatas boarddatas = boardcommand.read(get_idx);
-		
-		modelAndView.addObject("username", boarddatas.getUsername());
-		modelAndView.addObject("subject", boarddatas.getSubject());
-		modelAndView.addObject("contents", boarddatas.getContents());
-		modelAndView.addObject("idx", boarddatas.getIdx());
-	    
-		Map<String, Object> map = new HashMap<String, Object>();
+		BoardDataDto boarddatas = this.boardservice.read(get_idx);
+
+		Map<String, Object> map = new HashMap<>();
 	    map.put("boardDatas", boardDatas); // boardDatas
 	    modelAndView.addAllObjects(map);
 	    
@@ -148,17 +139,14 @@ public class Board {
 	
 	//수정 처리
 	@RequestMapping(value = "/modify_ok", method = RequestMethod.POST)
-	public String modify_ok(Locale locale, @Valid BoardDatas boardDatas, BindingResult bindingResult, Model model) {
+	public String modify_ok(Locale locale, @Valid BoardDataDto boardDatas, BindingResult bindingResult, Model model) {
 		
 		logger.info("modify ok", locale);
 
         if(bindingResult.hasErrors()) {
-        	
             return "modify";
-            
         } else {
-        	
-        	boardcommand.modify(boardDatas);
+			this.boardservice.modify(boardDatas);
         	return "redirect:/";
         }
 	}
@@ -171,9 +159,8 @@ public class Board {
 		logger.info("delete ok", locale);
 
 		int get_idx = Integer.parseInt(idx);
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		int result = boardcommand.delete(get_idx);
+		Map<String, Object> map = new HashMap<>();
+		int result = boardservice.delete(get_idx);
 		map.put("result",result);
 		return map;
 	}
