@@ -1,4 +1,4 @@
-CREATE TABLE mungmang_board (
+CREATE TABLE board (
   idx         INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   subject    VARCHAR(255) NULL,
   username    VARCHAR(255) NULL,
